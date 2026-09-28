@@ -1,0 +1,13 @@
+cabal-version: 3.0
+name: riesgo-academico-funcional
+version: 0.1.0.0
+
+executable riesgo-academico-funcional
+    main-is: Main.hs
+    hs-source-dirs: src
+    other-modules:
+        Modelo
+        Riesgo
+    build-depends:
+        base >= 4.18 && < 5
+    default-language: Haskell2010
