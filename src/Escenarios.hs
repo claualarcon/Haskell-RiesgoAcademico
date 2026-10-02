@@ -2,10 +2,10 @@ module Escenarios
     ( mejorarProgreso
     , mejorarAsistencia
     , reducirInasistencias
+    , escenariosProgreso
     ) where
 
 import Modelo
-
 
 mejorarProgreso :: Double -> Estudiante -> Estudiante
 mejorarProgreso incremento estudiante =
@@ -14,7 +14,6 @@ mejorarProgreso incremento estudiante =
             min 100 (progresoAcademico estudiante + incremento)
         }
 
-
 mejorarAsistencia :: Double -> Estudiante -> Estudiante
 mejorarAsistencia incremento estudiante =
     estudiante
@@ -22,10 +21,13 @@ mejorarAsistencia incremento estudiante =
             min 100 (asistencia estudiante + incremento)
         }
 
-
 reducirInasistencias :: Int -> Estudiante -> Estudiante
 reducirInasistencias cantidad estudiante =
     estudiante
         { inasistencias =
             max 0 (inasistencias estudiante - cantidad)
         }
+
+escenariosProgreso :: [Double] -> Estudiante -> [Estudiante]
+escenariosProgreso incrementos estudiante =
+    map (`mejorarProgreso` estudiante) incrementos

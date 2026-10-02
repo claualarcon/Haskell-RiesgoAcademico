@@ -4,7 +4,6 @@ import Modelo
 import Riesgo
 import Escenarios
 
-
 estudiante1 :: Estudiante
 estudiante1 = Estudiante
     { progresoAcademico = 25
@@ -17,53 +16,57 @@ estudiante1 = Estudiante
     , tesisPendiente = False
     }
 
+-- Evalúa una lista de estudiantes y devuelve
+-- el nivel de riesgo de cada uno.
+evaluarEscenarios :: [Estudiante] -> [NivelRiesgo]
+evaluarEscenarios estudiantes =
+    map evaluarRiesgo estudiantes
+
+-- Describe el cambio producido en el puntaje.
+mostrarCambio :: Int -> String
+mostrarCambio cambio
+    | cambio < 0 = "Disminuyo " ++ show (abs cambio) ++ " puntos"
+    | cambio > 0 = "Aumento " ++ show cambio ++ " puntos"
+    | otherwise  = "Sin cambios"
+
+-- Muestra y compara los resultados de los escenarios.
+mostrarResultados :: Estudiante -> [(Double, Estudiante)] -> IO ()
+mostrarResultados inicial escenarios =
+    mapM_ mostrar escenarios
+    where
+        mostrar (incremento, estudiante) = do
+            let puntajeInicial = puntajeTotal inicial
+            let puntajeActual = puntajeTotal estudiante
+            let cambio = puntajeActual - puntajeInicial
+
+            putStrLn ("+" ++ show incremento ++ "% de progreso")
+            putStrLn ("  Progreso: " ++ show (progresoAcademico estudiante) ++ "%")
+            putStrLn ("  Puntaje: " ++ show puntajeActual)
+            putStrLn ("  Cambio de puntaje: " ++ mostrarCambio cambio)
+            putStrLn ("  Riesgo: " ++ show (evaluarRiesgo estudiante))
+            putStrLn ""
 
 main :: IO ()
 main = do
-    putStrLn "=== MODELO DE RIESGO ACADEMICO ==="
+    putStrLn "=== MODELO FUNCIONAL DE RIESGO ACADEMICO ==="
     putStrLn ""
 
-    putStrLn "ESCENARIO INICIAL"
+    putStrLn "ESTUDIANTE INICIAL"
     print estudiante1
     putStrLn ("Puntaje: " ++ show (puntajeTotal estudiante1))
     putStrLn ("Riesgo: " ++ show (evaluarRiesgo estudiante1))
-
     putStrLn ""
 
-    putStrLn "ESCENARIO 1: +10% DE PROGRESO"
-    let escenario1 = mejorarProgreso 10 estudiante1
-    print escenario1
-    putStrLn ("Puntaje: " ++ show (puntajeTotal escenario1))
-    putStrLn ("Riesgo: " ++ show (evaluarRiesgo escenario1))
+    -- Lista de modificaciones que queremos experimentar.
+    let incrementos = [10, 20, 30]
 
+    -- Generamos automáticamente los escenarios.
+    let escenarios = escenariosProgreso incrementos estudiante1
+
+    -- Asociamos cada incremento con su escenario.
+    let escenariosConIncremento = zip incrementos escenarios
+
+    putStrLn "ESCENARIOS AUTOMATICOS"
     putStrLn ""
 
-    putStrLn "ESCENARIO 2: +20% DE PROGRESO"
-    let escenario2 = mejorarProgreso 20 estudiante1
-    print escenario2
-    putStrLn ("Puntaje: " ++ show (puntajeTotal escenario2))
-    putStrLn ("Riesgo: " ++ show (evaluarRiesgo escenario2))
-
-    putStrLn ""
-
-    putStrLn "ESCENARIO 3: +30% DE PROGRESO"
-    let escenario3 = mejorarProgreso 30 estudiante1
-    print escenario3
-    putStrLn ("Puntaje: " ++ show (puntajeTotal escenario3))
-    putStrLn ("Riesgo: " ++ show (evaluarRiesgo escenario3))
-
-    putStrLn ""
-
-    putStrLn "ESCENARIO 4: +10% DE ASISTENCIA"
-    let escenario4 = mejorarAsistencia 10 estudiante1
-    print escenario4
-    putStrLn ("Puntaje: " ++ show (puntajeTotal escenario4))
-    putStrLn ("Riesgo: " ++ show (evaluarRiesgo escenario4))
-
-    putStrLn ""
-
-    putStrLn "ESCENARIO 5: -2 INASISTENCIAS"
-    let escenario5 = reducirInasistencias 2 estudiante1
-    print escenario5
-    putStrLn ("Puntaje: " ++ show (puntajeTotal escenario5))
-    putStrLn ("Riesgo: " ++ show (evaluarRiesgo escenario5))
+    mostrarResultados estudiante1 escenariosConIncremento
