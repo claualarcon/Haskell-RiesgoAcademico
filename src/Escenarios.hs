@@ -3,6 +3,8 @@ module Escenarios
     , mejorarAsistencia
     , reducirInasistencias
     , escenariosProgreso
+    , escenariosAsistencia
+    , escenariosInasistencias
     ) where
 
 import Modelo
@@ -31,3 +33,11 @@ reducirInasistencias cantidad estudiante =
 escenariosProgreso :: [Double] -> Estudiante -> [Estudiante]
 escenariosProgreso incrementos estudiante =
     map (`mejorarProgreso` estudiante) incrementos
+
+escenariosAsistencia :: [Double] -> Estudiante -> [Estudiante]
+escenariosAsistencia incrementos estudiante =
+    map (`mejorarAsistencia` estudiante) incrementos
+
+escenariosInasistencias :: [Int] -> Estudiante -> [Estudiante]
+escenariosInasistencias reducciones estudiante =
+    map (`reducirInasistencias` estudiante) reducciones
